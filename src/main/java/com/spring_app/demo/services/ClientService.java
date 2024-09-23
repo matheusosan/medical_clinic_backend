@@ -26,6 +26,7 @@ public class ClientService {
     public Client createClient(ClientRequestDTO dto) {
 
         Optional<Client> clientExists = clientRepository.findByCpf(dto.cpf());
+        System.out.println(clientExists);
 
         if(clientExists.isPresent()) {
             throw new ClientAlreadyExistsException("Usuário já cadastrado no sistema!");

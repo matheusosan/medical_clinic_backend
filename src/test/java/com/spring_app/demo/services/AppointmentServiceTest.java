@@ -62,7 +62,7 @@ class AppointmentServiceTest {
                 .client(client)
                 .service(service)
                 .dataAgendada(Instant.now())
-                .status(Appointment.AppointmentStatus.SCHEDULED)
+                .status(Appointment.AppointmentStatus.CANCELADO)
                 .build();
     }
 
@@ -93,7 +93,7 @@ class AppointmentServiceTest {
 
         appointmentService.cancelAppointment(1L);
 
-        assertEquals(Appointment.AppointmentStatus.CANCELED, appointment.getStatus());
+        assertEquals(Appointment.AppointmentStatus.CANCELADO, appointment.getStatus());
 
         verify(appointmentRepository).save(appointment);
     }
@@ -103,7 +103,7 @@ class AppointmentServiceTest {
     void createAppointmentSuccess() {
         LocalDateTime date = LocalDateTime.of(2024, 9, 23, 10, 0);
         Instant validDate = date.toInstant(ZoneOffset.UTC);
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(validDate, service.getId(), client.getId(), Appointment.AppointmentStatus.SCHEDULED);
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(validDate, service.getId(), client.getId(), Appointment.AppointmentStatus.AGENDADO);
 
         when(clientService.findById(dto.getClientId())).thenReturn(client);
         when(serviceService.findById(dto.getServiceId())).thenReturn(service);
@@ -125,7 +125,7 @@ class AppointmentServiceTest {
         LocalDateTime sundayDateTime = LocalDateTime.of(2024, 9, 22, 10, 0);
         Instant sundayInstant = sundayDateTime.toInstant(ZoneOffset.UTC);
 
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(sundayInstant, service.getId(), client.getId(), Appointment.AppointmentStatus.SCHEDULED);
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(sundayInstant, service.getId(), client.getId(), Appointment.AppointmentStatus.AGENDADO);
 
         assertThrows(OutOfWorkingPeriodException.class, () -> appointmentService.createAppointment(dto));
     }
@@ -136,7 +136,7 @@ class AppointmentServiceTest {
         LocalDateTime invalidHour = LocalDateTime.of(2024, 9, 25, 8, 0);
         Instant invalidInstant = invalidHour.toInstant(ZoneOffset.UTC);
 
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(invalidInstant, service.getId(), client.getId(), Appointment.AppointmentStatus.SCHEDULED);
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(invalidInstant, service.getId(), client.getId(), Appointment.AppointmentStatus.AGENDADO);
 
         assertThrows(OutOfWorkingPeriodException.class, () -> appointmentService.createAppointment(dto));
     }

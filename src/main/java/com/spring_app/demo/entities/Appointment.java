@@ -29,6 +29,9 @@ public class Appointment {
     @JoinColumn(name = "client_id")
     Client client;
 
+    @Column(name = "cancellation_reason")
+    String cancellationReason;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     AppointmentStatus status;
@@ -73,9 +76,16 @@ public class Appointment {
         this.status = status;
     }
 
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
+    }
+
     public enum AppointmentStatus {
-        SCHEDULED,
-        COMPLETED,
-        CANCELED,
+        AGENDADO,
+        CANCELADO,
     }
 }

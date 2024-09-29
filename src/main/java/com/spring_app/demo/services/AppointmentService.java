@@ -64,7 +64,8 @@ public class AppointmentService {
 
         if (appointmentOptional.isPresent()) {
             Appointment appointment = appointmentOptional.get();
-            appointment.setStatus(Appointment.AppointmentStatus.CANCELED);
+            appointment.setStatus(Appointment.AppointmentStatus.CANCELADO);
+            appointment.setCancellationReason("Cancelado pelo usuário.");
             appointmentRepository.save(appointment);
         } else {
             throw new AppointmentNotFoundException("Agendamento não encontrado");
@@ -92,7 +93,7 @@ public class AppointmentService {
                 .service(service)
                 .client(client)
                 .dataAgendada(dto.getDataAgendada())
-                .status(dto.getStatus())
+                .status(Appointment.AppointmentStatus.AGENDADO)
                 .build();
 
        return appointmentRepository.save(newAppointment);

@@ -7,6 +7,7 @@ import com.spring_app.demo.entities.Service;
 import com.spring_app.demo.exceptions.ScheduleExceptions.AppointmentNotFoundException;
 import com.spring_app.demo.exceptions.ScheduleExceptions.OutOfWorkingPeriodException;
 import com.spring_app.demo.repositories.AppointmentRepository;
+import com.spring_app.demo.services.MessagingService.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spring_app.demo.utils.BusinessHoursUtil;
@@ -28,6 +29,9 @@ public class AppointmentService {
 
     @Autowired
     private ServiceService serviceService;
+
+    @Autowired
+    private MessagingService messagingService;
 
 
     public List<Appointment> getAllAppointments() {
@@ -96,7 +100,9 @@ public class AppointmentService {
                 .status(Appointment.AppointmentStatus.AGENDADO)
                 .build();
 
-       return appointmentRepository.save(newAppointment);
+       Appointment createdAppointment = appointmentRepository.save(newAppointment);
+       messagingService.sendMessage("email_topic", "Consulta agendada com sucesso!");
+       return createdAppointment;
     }
 
 }

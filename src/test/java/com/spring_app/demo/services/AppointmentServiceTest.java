@@ -6,6 +6,7 @@ import com.spring_app.demo.entities.Client;
 import com.spring_app.demo.entities.Service;
 import com.spring_app.demo.exceptions.ScheduleExceptions.OutOfWorkingPeriodException;
 import com.spring_app.demo.repositories.AppointmentRepository;
+import com.spring_app.demo.services.MessagingService.MessagingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,9 @@ class AppointmentServiceTest {
 
     @Mock
     private ServiceService serviceService;
+
+    @Mock
+    private MessagingService messagingService;
 
     @InjectMocks
     private AppointmentService appointmentService;

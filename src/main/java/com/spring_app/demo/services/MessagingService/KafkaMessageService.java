@@ -14,10 +14,9 @@ public class KafkaMessageService implements MessagingService {
     public void sendMessage(String topic, String message) {
         try {
             kafkaTemplate.send(topic, message);
-            System.out.println("Enviou!");
 
         } catch (RuntimeException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getMessage());
         }
     }
 }

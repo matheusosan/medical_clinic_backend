@@ -1,5 +1,7 @@
 package com.spring_app.demo.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring_app.demo.dtos.Appointment.AppointmentRequestDTO;
 import com.spring_app.demo.entities.Appointment;
 import com.spring_app.demo.entities.Client;
@@ -7,6 +9,7 @@ import com.spring_app.demo.entities.Service;
 import com.spring_app.demo.exceptions.ScheduleExceptions.AppointmentNotFoundException;
 import com.spring_app.demo.exceptions.ScheduleExceptions.OutOfWorkingPeriodException;
 import com.spring_app.demo.repositories.AppointmentRepository;
+import com.spring_app.demo.services.MessagingService.KafkaMessageBuilder;
 import com.spring_app.demo.services.MessagingService.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -77,7 +81,7 @@ public class AppointmentService {
     }
 
 
-    public Appointment createAppointment(AppointmentRequestDTO dto) {
+    public Appointment createAppointment(AppointmentRequestDTO dto) throws JsonProcessingException {
         boolean isOpeningHours = BusinessHoursUtil.isOpeningHours(dto.getDataAgendada());
 
         String dayOfWeek = BusinessHoursUtil.getDayOfWeek(dto.getDataAgendada());
@@ -101,7 +105,13 @@ public class AppointmentService {
                 .build();
 
        Appointment createdAppointment = appointmentRepository.save(newAppointment);
-       messagingService.sendMessage("email_topic", "Consulta agendada com sucesso!");
+
+        Map<String, Object> messagePayload = KafkaMessageBuilder.buildAppointmentMessage(
+                client, service, dto.getDataAgendada()
+        );
+
+       messagingService.sendMessage("email_topic", new ObjectMapper().writeValueAsString(messagePayload));
+
        return createdAppointment;
     }
 

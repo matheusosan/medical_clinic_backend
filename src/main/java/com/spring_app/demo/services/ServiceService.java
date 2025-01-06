@@ -2,7 +2,6 @@ package com.spring_app.demo.services;
 
 import com.spring_app.demo.dtos.Service.ServiceRequestDTO;
 import com.spring_app.demo.entities.Service;
-import com.spring_app.demo.exceptions.ClientExceptions.ClientNotFoundException;
 import com.spring_app.demo.exceptions.ServiceExceptions.ServiceNotFoundException;
 import com.spring_app.demo.repositories.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +23,7 @@ public class ServiceService {
     }
 
     public Service createService(ServiceRequestDTO dto) {
-        Service newService = new Service();
-
-        newService.setName(dto.getName());
-        newService.setPrice(dto.getPrice());
-
+        Service newService = new Service(dto.getName(), dto.getPrice());
         return serviceRepository.save(newService);
-
     }
 }

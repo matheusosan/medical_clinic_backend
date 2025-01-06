@@ -98,6 +98,7 @@ class AppointmentServiceTest {
         appointmentService.cancelAppointment(1L);
 
         assertEquals(Appointment.AppointmentStatus.CANCELADO, appointment.getStatus());
+        assertEquals("Cancelado pelo usuário.", appointment.getCancellationReason());
 
         verify(appointmentRepository).save(appointment);
     }

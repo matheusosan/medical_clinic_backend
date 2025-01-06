@@ -11,6 +11,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - medical-clinic-network
 
   spring-app:
     build:
@@ -25,9 +27,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spring_app
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092 # Configuração do Kafka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8080:8080"
+    networks:
+      - medical-clinic-network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -38,6 +42,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "5050:80"
+    networks:
+      - medical-clinic-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.1
@@ -48,6 +54,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - medical-clinic-network
 
   kafka:
     image: confluentinc/cp-kafka:7.4.1
@@ -62,6 +70,8 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
       - "9092:9092"
+    networks:
+      - medical-clinic-network
 
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
@@ -73,7 +83,13 @@ services:
       - "9000:9000"
     depends_on:
       - kafka
+    networks:
+      - medical-clinic-network
 
 
 volumes:
   postgres-data:
+
+networks:
+  medical-clinic-network:
+    external: true

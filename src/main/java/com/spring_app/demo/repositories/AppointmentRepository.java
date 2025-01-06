@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    @Query("SELECT a FROM Appointment a WHERE DATE(a.dataAgendada) = :date AND a.service.id = :serviceId")
+    @Query("SELECT a FROM Appointment a WHERE DATE(a.dataAgendada) = :date AND a.service.id = :serviceId AND (a.status IS NULL OR a.status = 'CANCELADO')")
     List<Appointment> findAllByDateAndServiceId(@Param("date") LocalDate date, @Param("serviceId") Long serviceId);
 
     @Query("SELECT a FROM Appointment a WHERE a.client.id = :userId")

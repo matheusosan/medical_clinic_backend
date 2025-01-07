@@ -54,7 +54,6 @@ public class Client implements UserDetails {
         this.role = role;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(this.role == UserRoles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
@@ -87,4 +86,19 @@ public class Client implements UserDetails {
     }
 
 
+    public enum UserRoles {
+        ADMIN("admin"),
+
+        USER("user");
+
+        private String role;
+
+        UserRoles(String role) {
+            this.role = role;
+        }
+
+        public String getRole() {
+            return role;
+        }
+    }
 }

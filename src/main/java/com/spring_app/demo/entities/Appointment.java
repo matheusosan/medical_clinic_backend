@@ -1,9 +1,7 @@
 package com.spring_app.demo.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -12,6 +10,8 @@ import java.time.Instant;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Appointment {
 
     @Id
@@ -35,54 +35,6 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     AppointmentStatus status;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Instant getDataAgendada() {
-        return dataAgendada;
-    }
-
-    public void setDataAgendada(Instant dataAgendada) {
-        this.dataAgendada = dataAgendada;
-    }
-
-    public Service getService() {
-        return service;
-    }
-
-    public void setService(Service service) {
-        this.service = service;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public AppointmentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(AppointmentStatus status) {
-        this.status = status;
-    }
-
-    public String getCancellationReason() {
-        return cancellationReason;
-    }
-
-    public void setCancellationReason(String cancellationReason) {
-        this.cancellationReason = cancellationReason;
-    }
 
     public enum AppointmentStatus {
         AGENDADO,

@@ -1,15 +1,17 @@
 package com.spring_app.demo.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring_app.demo.dtos.Appointment.AppointmentRequestDTO;
+import com.spring_app.demo.dtos.EmailPayloadDTO;
 import com.spring_app.demo.entities.Appointment;
 import com.spring_app.demo.entities.Client;
 import com.spring_app.demo.entities.Service;
 import com.spring_app.demo.exceptions.ScheduleExceptions.AppointmentNotFoundException;
 import com.spring_app.demo.exceptions.ScheduleExceptions.OutOfWorkingPeriodException;
 import com.spring_app.demo.repositories.AppointmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.spring_app.demo.services.MessagingService.MessagingService;
 import com.spring_app.demo.utils.BusinessHoursUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
@@ -29,6 +31,9 @@ public class AppointmentService {
     @Autowired
     private ServiceService serviceService;
 
+    @Autowired
+    private MessagingService messagingService;
+
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
@@ -37,14 +42,8 @@ public class AppointmentService {
     public List<AppointmentRequestDTO> findAllByDateAndServiceId(LocalDate date, Long serviceId) {
         List<Appointment> appointments = appointmentRepository.findAllByDateAndServiceId(date, serviceId);
         return appointments.stream().map(appointment ->
-                new AppointmentRequestDTO(
-                        appointment.getDataAgendada(),
-                        appointment.getService().getId(),
-                        appointment.getClient().getId(),
-                        appointment.getStatus()
-
-                )
-        ).collect(Collectors.toList());
+                new AppointmentRequestDTO(appointment.getDataAgendada(), appointment.getService().getId(), appointment.getClient().getId(),appointment.getStatus()))
+                    .collect(Collectors.toList());
     }
 
     public List<Appointment> findAllAppointmentsByUserId(Long id, String sortBy) {
@@ -67,13 +66,14 @@ public class AppointmentService {
             appointment.setStatus(Appointment.AppointmentStatus.CANCELADO);
             appointment.setCancellationReason("Cancelado pelo usuário.");
             appointmentRepository.save(appointment);
-        } else {
-            throw new AppointmentNotFoundException("Agendamento não encontrado");
+            return;
         }
+        throw new AppointmentNotFoundException("Agendamento não encontrado");
+
     }
 
 
-    public Appointment createAppointment(AppointmentRequestDTO dto) {
+    public Appointment createAppointment(AppointmentRequestDTO dto) throws JsonProcessingException {
         boolean isOpeningHours = BusinessHoursUtil.isOpeningHours(dto.getDataAgendada());
 
         String dayOfWeek = BusinessHoursUtil.getDayOfWeek(dto.getDataAgendada());
@@ -96,7 +96,11 @@ public class AppointmentService {
                 .status(Appointment.AppointmentStatus.AGENDADO)
                 .build();
 
-       return appointmentRepository.save(newAppointment);
+       Appointment createdAppointment = appointmentRepository.save(newAppointment);
+
+       messagingService.sendMessage("email_topic", new EmailPayloadDTO(client.getName(), client.getEmail(), dto.getDataAgendada().toString(), service.getName()));
+
+       return createdAppointment;
     }
 
 }

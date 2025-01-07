@@ -2,12 +2,10 @@ package com.spring_app.demo.services;
 
 import com.spring_app.demo.dtos.Client.ClientRequestDTO;
 import com.spring_app.demo.entities.Client;
-import com.spring_app.demo.entities.UserRoles;
 import com.spring_app.demo.exceptions.ClientExceptions.ClientAlreadyExistsException;
 import com.spring_app.demo.exceptions.ClientExceptions.ClientNotFoundException;
 import com.spring_app.demo.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +36,7 @@ public class ClientService {
                 .cpf(dto.cpf())
                 .birthDate(dto.birthDate())
                 .phoneNumber(dto.phoneNumber())
-                .role(UserRoles.USER).build();
+                .role(Client.UserRoles.USER).build();
 
         return clientRepository.save(client);
     }

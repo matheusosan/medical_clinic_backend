@@ -1,17 +1,18 @@
 package com.spring_app.demo.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring_app.demo.dtos.Appointment.AppointmentRequestDTO;
 import com.spring_app.demo.entities.Appointment;
 import com.spring_app.demo.entities.Client;
 import com.spring_app.demo.entities.Service;
 import com.spring_app.demo.exceptions.ScheduleExceptions.OutOfWorkingPeriodException;
 import com.spring_app.demo.repositories.AppointmentRepository;
+import com.spring_app.demo.services.MessagingService.MessagingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
@@ -35,6 +36,9 @@ class AppointmentServiceTest {
 
     @Mock
     private ServiceService serviceService;
+
+    @Mock
+    private MessagingService messagingService;
 
     @InjectMocks
     private AppointmentService appointmentService;
@@ -94,13 +98,14 @@ class AppointmentServiceTest {
         appointmentService.cancelAppointment(1L);
 
         assertEquals(Appointment.AppointmentStatus.CANCELADO, appointment.getStatus());
+        assertEquals("Cancelado pelo usuário.", appointment.getCancellationReason());
 
         verify(appointmentRepository).save(appointment);
     }
 
     @DisplayName("Should create an appointment successfully")
     @Test
-    void createAppointmentSuccess() {
+    void createAppointmentSuccess() throws JsonProcessingException {
         LocalDateTime date = LocalDateTime.of(2024, 9, 23, 10, 0);
         Instant validDate = date.toInstant(ZoneOffset.UTC);
         AppointmentRequestDTO dto = new AppointmentRequestDTO(validDate, service.getId(), client.getId(), Appointment.AppointmentStatus.AGENDADO);

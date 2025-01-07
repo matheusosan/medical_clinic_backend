@@ -1,5 +1,6 @@
 package com.spring_app.demo.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring_app.demo.dtos.Appointment.AppointmentRequestDTO;
 import com.spring_app.demo.dtos.Appointment.AppointmentResponseDTO;
 import com.spring_app.demo.entities.Appointment;
@@ -45,7 +46,7 @@ public class AppointmentController {
     }
 
     @PostMapping()
-    ResponseEntity<AppointmentResponseDTO> createAppointment(@RequestBody AppointmentRequestDTO dto) {
+    ResponseEntity<AppointmentResponseDTO> createAppointment(@RequestBody AppointmentRequestDTO dto) throws JsonProcessingException {
         Appointment newAppointment = appointmentService.createAppointment(dto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAppointment).toUri();

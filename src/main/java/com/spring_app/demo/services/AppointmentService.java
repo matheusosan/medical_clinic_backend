@@ -1,6 +1,5 @@
 package com.spring_app.demo.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring_app.demo.dtos.Appointment.AppointmentRequestDTO;
 import com.spring_app.demo.dtos.EmailPayloadDTO;
 import com.spring_app.demo.entities.Appointment;
@@ -73,7 +72,7 @@ public class AppointmentService {
     }
 
 
-    public Appointment createAppointment(AppointmentRequestDTO dto) throws JsonProcessingException {
+    public Appointment createAppointment(AppointmentRequestDTO dto) {
         boolean isOpeningHours = BusinessHoursUtil.isOpeningHours(dto.getDataAgendada());
 
         String dayOfWeek = BusinessHoursUtil.getDayOfWeek(dto.getDataAgendada());

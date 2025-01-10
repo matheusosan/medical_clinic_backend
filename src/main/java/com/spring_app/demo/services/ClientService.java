@@ -23,19 +23,19 @@ public class ClientService {
 
     public Client createClient(ClientRequestDTO dto) {
 
-        Optional<Client> clientExists = clientRepository.findByCpf(dto.cpf());
+        Optional<Client> clientExists = clientRepository.findByCpf(dto.getCpf());
 
         if(clientExists.isPresent()) {
             throw new ClientAlreadyExistsException("Usuário já cadastrado no sistema!");
         }
 
         Client client = Client.builder()
-                .email(dto.email())
-                .name(dto.name())
-                .password(passwordEncoder.encode(dto.password()))
-                .cpf(dto.cpf())
-                .birthDate(dto.birthDate())
-                .phoneNumber(dto.phoneNumber())
+                .email(dto.getEmail())
+                .name(dto.getName())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .cpf(dto.getCpf())
+                .birthDate(dto.getBirthDate())
+                .phoneNumber(dto.getPhoneNumber())
                 .role(Client.UserRoles.USER).build();
 
         return clientRepository.save(client);

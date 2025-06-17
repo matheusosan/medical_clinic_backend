@@ -1,12 +1,12 @@
 package com.spring_app.demo.controllers;
 
-import com.spring_app.demo.dtos.Client.ClientRequestDTO;
-import com.spring_app.demo.dtos.Client.ClientResponseDTO;
-import com.spring_app.demo.dtos.ErrorResponseDTO;
-import com.spring_app.demo.dtos.SuccessResponseDTO;
-import com.spring_app.demo.entities.Client;
-import com.spring_app.demo.security.TokenService;
-import com.spring_app.demo.services.ClientService;
+import com.spring_app.demo.application.services.IClientService;
+import com.spring_app.demo.domain.dtos.Client.ClientRequestDTO;
+import com.spring_app.demo.domain.dtos.Client.ClientResponseDTO;
+import com.spring_app.demo.domain.dtos.ErrorResponseDTO;
+import com.spring_app.demo.domain.dtos.SuccessResponseDTO;
+import com.spring_app.demo.domain.entities.Client;
+import com.spring_app.demo.security.ITokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +28,13 @@ import java.util.List;
 @Tag(name = "Client", description = "Manipula operações relacionadas a clientes.")
 @Validated
 public class ClientController {
+    private final IClientService clientService;
+    private final ITokenService tokenService;
 
-    @Autowired
-    private ClientService clientService;
-
-    @Autowired
-    private TokenService tokenService;
-
+    public ClientController(IClientService clientService, ITokenService tokenService) {
+        this.clientService = clientService;
+        this.tokenService = tokenService;
+    }
 
     @Operation(summary = "Cadastra um cliente", method = "POST")
     @ApiResponses(value = {
@@ -45,7 +44,6 @@ public class ClientController {
                     description = "Erro: Cliente já cadastrado.",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
             ),
-
     })
     @PostMapping()
     ResponseEntity<SuccessResponseDTO> createClient(@Valid @RequestBody ClientRequestDTO dto ) {

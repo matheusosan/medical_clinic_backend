@@ -1,6 +1,6 @@
 package com.spring_app.demo.security;
 
-import com.spring_app.demo.repositories.ClientRepository;
+import com.spring_app.demo.infra.repositories.ClientRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    TokenService tokenService;
+    ITokenService tokenService;
 
     @Autowired
     ClientRepository repository;

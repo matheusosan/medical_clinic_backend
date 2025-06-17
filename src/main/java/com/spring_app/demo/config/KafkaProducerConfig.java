@@ -1,6 +1,6 @@
 package com.spring_app.demo.config;
 
-import com.spring_app.demo.dtos.EmailPayloadDTO;
+import com.spring_app.demo.domain.dtos.EmailPayloadDTO;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

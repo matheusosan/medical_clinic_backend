@@ -1,10 +1,10 @@
 package com.spring_app.demo.controllers;
 
-import com.spring_app.demo.dtos.Appointment.AppointmentRequestDTO;
-import com.spring_app.demo.dtos.ErrorResponseDTO;
-import com.spring_app.demo.dtos.SuccessResponseDTO;
-import com.spring_app.demo.entities.Appointment;
-import com.spring_app.demo.services.AppointmentService;
+import com.spring_app.demo.application.services.IAppointmentService;
+import com.spring_app.demo.domain.dtos.Appointment.AppointmentRequestDTO;
+import com.spring_app.demo.domain.dtos.ErrorResponseDTO;
+import com.spring_app.demo.domain.dtos.SuccessResponseDTO;
+import com.spring_app.demo.domain.entities.Appointment;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +26,11 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @Tag(name = "Appointment", description = "Manipula operações relacionadas a agendamentos")
 public class AppointmentController {
+    private final IAppointmentService appointmentService;
 
-    @Autowired
-    private AppointmentService appointmentService;
+    public AppointmentController(IAppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
+    }
 
     @Operation(summary = "Busca todos agendamentos", method = "GET")
     @ApiResponses(value = {
@@ -46,9 +47,9 @@ public class AppointmentController {
             @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso")
     })
     @GetMapping("/date")
-    public List<AppointmentRequestDTO> getAppointmentsByDateAndServiceId(@RequestParam("date") String date, @RequestParam("serviceId") Long serviceId) {
+    public List<AppointmentRequestDTO> getAppointmentsByDateAndServiceId(@RequestParam("date") String date, @RequestParam("specialityId") Long specialityId) {
         LocalDate localDate = LocalDate.parse(date);
-        return appointmentService.findAllByDateAndServiceId(localDate, serviceId);
+        return appointmentService.findAllByDateAndServiceId(localDate, specialityId);
     }
 
 

@@ -27,9 +27,12 @@ public class SecurityConfiguration  {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET,"/client/profile").authenticated()
                         .requestMatchers(HttpMethod.POST,"/appointment").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/appointment").authenticated()
                         .requestMatchers(HttpMethod.PATCH,"/appointment/cancel/{id}").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/service").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/client/profile").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/client").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

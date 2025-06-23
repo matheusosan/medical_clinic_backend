@@ -1,7 +1,10 @@
 package com.spring_app.demo.controllers;
 
 import com.spring_app.demo.application.services.IAppointmentService;
+import com.spring_app.demo.domain.dtos.ApiResponseDto;
 import com.spring_app.demo.domain.dtos.Appointment.AppointmentRequestDTO;
+import com.spring_app.demo.domain.dtos.Appointment.AppointmentResponseDTO;
+import com.spring_app.demo.domain.dtos.Appointment.AppointmentResponseDTOSwagger;
 import com.spring_app.demo.domain.dtos.ErrorResponseDTO;
 import com.spring_app.demo.domain.dtos.SuccessResponseDTO;
 import com.spring_app.demo.domain.entities.Appointment;
@@ -12,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +38,18 @@ public class AppointmentController {
 
     @Operation(summary = "Busca todos agendamentos", method = "GET")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso")
+            @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso.", content = @Content(schema = @Schema(implementation = AppointmentResponseDTOSwagger.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Erro: Agendamento não encontrado.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+            )
     })
     @GetMapping()
-    List<Appointment> getAllAppointments() {
-        return appointmentService.getAllAppointments();
+    ResponseEntity<ApiResponseDto<List<AppointmentResponseDTO>>> getAllAppointments() {
+        var appointments = appointmentService.getAllAppointments();
+
+        return ResponseEntity.ok(new ApiResponseDto<>(appointments, appointments.isEmpty() ? "Não foram encontrados agendamentos" : "Agendamentos retornados com sucesso!", HttpStatus.OK.value()));
     }
 
 

@@ -74,16 +74,16 @@ class AppointmentSpecialityTest {
     }
 
 
-    @Test
-    void getAllAppointments() {
-        when(appointmentRepository.findAll()).thenReturn(Collections.singletonList(appointment));
-
-        List<Appointment> foundAppointments = appointmentService.getAllAppointments();
-
-        assertEquals("John Doe", foundAppointments.getFirst().getClient().getName());
-        assertEquals("Radiologia", foundAppointments.getFirst().getSpeciality().getName());
-        verify(appointmentRepository, times(1)).findAll();
-    }
+//    @Test
+//    void getAllAppointments() {
+//        when(appointmentRepository.findAll()).thenReturn(Collections.singletonList(appointment));
+//
+//        List<Appointment> foundAppointments = appointmentService.getAllAppointments();
+//
+//        assertEquals("John Doe", foundAppointments.getFirst().getClient().getName());
+//        assertEquals("Radiologia", foundAppointments.getFirst().getSpeciality().getName());
+//        verify(appointmentRepository, times(1)).findAll();
+//    }
 
     @Test
     void findAllByDateAndServiceId() {

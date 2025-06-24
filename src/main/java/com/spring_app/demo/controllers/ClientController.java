@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "${frontend.url}", allowCredentials = "true")
 @Tag(name = "Client", description = "Manipula operações relacionadas a clientes.")
 @Validated
 public class ClientController {

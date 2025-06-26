@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(value = "*")
+@CrossOrigin(origins = "${frontend.url}", allowCredentials = "true")
 @Tag(name = "Authentication", description = "Manipula operações relacionadas a autenticação.")
 @Validated
 public class AuthenticationController {

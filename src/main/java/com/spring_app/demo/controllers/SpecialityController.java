@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/service")
-@CrossOrigin(value = "*")
+@CrossOrigin(origins = "${frontend.url}", allowCredentials = "true")
 @Tag(name = "Service", description = "Manipula operações relacionadas a services.")
 @Validated
 public class SpecialityController {

@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/appointment")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "${frontend.url}", allowCredentials = "true")
 @Tag(name = "Appointment", description = "Manipula operações relacionadas a agendamentos")
 public class AppointmentController {
     private final IAppointmentService appointmentService;

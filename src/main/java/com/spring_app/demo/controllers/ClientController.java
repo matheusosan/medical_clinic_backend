@@ -1,10 +1,11 @@
 package com.spring_app.demo.controllers;
 
 import com.spring_app.demo.application.services.IClientService;
+import com.spring_app.demo.domain.dtos.ApiResponseDto;
 import com.spring_app.demo.domain.dtos.Client.ClientRequestDTO;
 import com.spring_app.demo.domain.dtos.Client.ClientResponseDTO;
+import com.spring_app.demo.domain.dtos.Client.ClientResponseDTOSwagger;
 import com.spring_app.demo.domain.dtos.ErrorResponseDTO;
-import com.spring_app.demo.domain.dtos.SuccessResponseDTO;
 import com.spring_app.demo.domain.entities.Client;
 import com.spring_app.demo.security.ITokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,7 @@ public class ClientController {
 
     @Operation(summary = "Cadastra um cliente", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Cliente cadastrado com sucesso."),
+            @ApiResponse(responseCode = "201", description = "Cliente cadastrado com sucesso.", content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
             @ApiResponse(
                     responseCode = "409",
                     description = "Erro: Cliente já cadastrado.",
@@ -46,22 +48,23 @@ public class ClientController {
             ),
     })
     @PostMapping()
-    ResponseEntity<SuccessResponseDTO> createClient(@Valid @RequestBody ClientRequestDTO dto ) {
+    ResponseEntity<ApiResponseDto> createClient(@Valid @RequestBody ClientRequestDTO dto ) {
         Client newClient = clientService.createClient(dto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newClient).toUri();
-        SuccessResponseDTO response = new SuccessResponseDTO(201, "Paciente cadastrado com sucesso!");
 
-        return ResponseEntity.created(location).body(response);
+        return ResponseEntity.created(location).body(new ApiResponseDto<>(null, "Cadastro realizado com sucesso!", HttpStatus.CREATED.value()));
     }
 
 
     @Operation(summary = "Busca todos clientes", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca todos os clientes.")
+            @ApiResponse(responseCode = "200", description = "Busca todos os clientes.", content = @Content(schema = @Schema(implementation = ClientResponseDTOSwagger.class)))
     })
     @GetMapping()
-    List<Client> getAllClients() {
-        return clientService.getAllClients();
+    ResponseEntity<ApiResponseDto<List<ClientResponseDTO>>> getAllClients() {
+        var clients = clientService.getAllClients();
+
+        return ResponseEntity.ok(new ApiResponseDto<>(clients, clients.isEmpty() ? "Não foram encontrados clientes." : "Clientes encontrados com sucesso!", HttpStatus.OK.value()));
     }
 
 
@@ -83,7 +86,7 @@ public class ClientController {
 
     @Operation(summary = "Busca um cliente por CPF", method = "GET")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso."),
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.", content = @Content(schema = @Schema(implementation = ClientResponseDTOSwagger.class))),
             @ApiResponse(
                     responseCode = "404",
                     description = "Erro: Cliente não encontrado.",
@@ -91,12 +94,10 @@ public class ClientController {
             ),
     })
     @GetMapping("/cpf/{cpf}")
-    ResponseEntity<ClientResponseDTO> findByCPF(@PathVariable String cpf) {
-        Client client = clientService.findClientByCPF(cpf);
+    ResponseEntity<ApiResponseDto<ClientResponseDTO>> findByCPF(@PathVariable String cpf) {
+        var client = clientService.findClientByCPF(cpf);
 
-        ClientResponseDTO response = new ClientResponseDTO(client.getId(), client.getName(), client.getEmail(), client.getPhoneNumber(), client.getCpf(), client.getBirthDate(), client.getRole());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new ApiResponseDto<>(client, "Cliente encontrado com sucesso!", HttpStatus.OK.value()));
     }
 
 

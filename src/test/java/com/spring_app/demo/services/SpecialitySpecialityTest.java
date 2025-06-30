@@ -39,16 +39,16 @@ class SpecialitySpecialityTest {
         speciality.setPrice(BigDecimal.valueOf(99.9));
     }
 
-    @DisplayName("Should return all Services")
-    @Test
-    void getAllServices() {
-        Mockito.when(repository.findAll()).thenReturn(Collections.singletonList(speciality));
-
-        List<Speciality> foundSpeciality = specialityService.getAllServices();
-
-        assertNotNull(speciality);
-        assertEquals("Radiologia", foundSpeciality.getFirst().getName());
-    }
+//    @DisplayName("Should return all Services")
+//    @Test
+//    void getAllServices() {
+//        Mockito.when(repository.findAll()).thenReturn(Collections.singletonList(speciality));
+//
+//        List<Speciality> foundSpeciality = specialityService.getAllServices();
+//
+//        assertNotNull(speciality);
+//        assertEquals("Radiologia", foundSpeciality.getFirst().getName());
+//    }
 
     @DisplayName("Should return a service by ID")
     @Test

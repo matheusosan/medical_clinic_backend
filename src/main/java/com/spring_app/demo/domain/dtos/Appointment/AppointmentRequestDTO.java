@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -22,11 +23,11 @@ public class AppointmentRequestDTO {
 
     @Schema( type = "long", example = "1")
     @NotNull
-    Long serviceId;
+    UUID serviceId;
 
     @NotNull
     @Schema( type = "long", example = "1")
-    Long clientId;
+    UUID clientId;
 
     Appointment.AppointmentStatus status;
 

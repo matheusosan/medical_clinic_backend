@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,14 +54,14 @@ public class AppointmentService implements IAppointmentService {
         return appointments;
     }
 
-    public List<AppointmentByDateAndService> findAllByDateAndServiceId(LocalDate date, Long specialityId) {
+    public List<AppointmentByDateAndService> findAllByDateAndServiceId(LocalDate date, UUID specialityId) {
         List<Appointment> appointments = appointmentRepository.findAllByDateAndServiceId(date, specialityId);
         return appointments.stream().map(appointment ->
                 new AppointmentByDateAndService(appointment.getDataAgendada(), appointment.getSpeciality().getId(), appointment.getClient().getId(),appointment.getStatus()))
                     .collect(Collectors.toList());
     }
 
-    public List<AppointmentResponseDTO> findAllAppointmentsByUserId(Long id, String sortBy) {
+    public List<AppointmentResponseDTO> findAllAppointmentsByUserId(UUID id, String sortBy) {
         Sort sort = switch (sortBy.toLowerCase()) {
             case "oldest" -> Sort.by(Sort.Direction.ASC, "dataAgendada");
             case "newest" -> Sort.by(Sort.Direction.DESC, "dataAgendada");
@@ -87,7 +88,7 @@ public class AppointmentService implements IAppointmentService {
         return appointments;
     }
 
-    public void cancelAppointment(Long id) {
+    public void cancelAppointment(UUID id) {
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
 
         if (appointmentOptional.isPresent()) {

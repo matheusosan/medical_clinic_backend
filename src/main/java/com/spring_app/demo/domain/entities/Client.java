@@ -27,13 +27,13 @@ public class Client implements UserDetails {
     @Column(name = "tb_name")
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "tb_phone_number")
+    @Column(name = "tb_phone_number", unique = true)
     private String phoneNumber;
 
     @Column(name = "tb_cpf", unique = true)

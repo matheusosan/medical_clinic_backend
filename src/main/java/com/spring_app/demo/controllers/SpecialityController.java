@@ -46,7 +46,7 @@ public class SpecialityController {
     }
 
 
-    @Operation(summary = "Cadastra um cliente", method = "POST")
+    @Operation(summary = "Cadastra um serviço", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Cliente cadastrado com sucesso.",  content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
     })

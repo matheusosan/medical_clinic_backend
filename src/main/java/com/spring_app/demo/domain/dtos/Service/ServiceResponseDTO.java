@@ -1,26 +1,27 @@
 package com.spring_app.demo.domain.dtos.Service;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class ServiceResponseDTO {
 
-    Long id;
+    UUID id;
     String name;
     BigDecimal price;
 
     public ServiceResponseDTO() {}
 
-    public ServiceResponseDTO(Long id, String name, BigDecimal price) {
+    public ServiceResponseDTO(UUID id, String name, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.price = price;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

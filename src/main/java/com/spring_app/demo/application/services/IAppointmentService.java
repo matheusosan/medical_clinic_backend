@@ -7,11 +7,12 @@ import com.spring_app.demo.domain.dtos.Appointment.AppointmentRequestDTO;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public interface IAppointmentService {
     List<AppointmentResponseDTO> getAllAppointments();
-    List<AppointmentByDateAndService> findAllByDateAndServiceId(LocalDate date, Long serviceId);
-    List<AppointmentResponseDTO> findAllAppointmentsByUserId(Long id, String sortBy);
-    void cancelAppointment(Long id);
+    List<AppointmentByDateAndService> findAllByDateAndServiceId(LocalDate date, UUID serviceId);
+    List<AppointmentResponseDTO> findAllAppointmentsByUserId(UUID id, String sortBy);
+    void cancelAppointment(UUID id);
     Appointment createAppointment(AppointmentRequestDTO dto);
 }

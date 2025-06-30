@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/appointment")
@@ -56,7 +57,7 @@ public class AppointmentController {
             @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso", content = @Content(schema = @Schema(implementation = AppointmentByDateAndServiceSwagger.class)))
     })
     @GetMapping("/date")
-    public ResponseEntity<ApiResponseDto<List<AppointmentByDateAndService>>> getAppointmentsByDateAndServiceId(@RequestParam("date") String date, @RequestParam("specialityId") Long specialityId) {
+    public ResponseEntity<ApiResponseDto<List<AppointmentByDateAndService>>> getAppointmentsByDateAndServiceId(@RequestParam("date") String date, @RequestParam("specialityId") UUID specialityId) {
         LocalDate localDate = LocalDate.parse(date);
         var appointments = appointmentService.findAllByDateAndServiceId(localDate, specialityId);
         return ResponseEntity.ok(new ApiResponseDto<>(appointments,  appointments.isEmpty() ? "Não foarm encontrados agendamentos" : "Agendamentos retornados com sucesso!", HttpStatus.OK.value()));
@@ -73,7 +74,7 @@ public class AppointmentController {
             )
     })
     @GetMapping("/client/{id}")
-    public ResponseEntity<ApiResponseDto<List<AppointmentResponseDTO>>> findAllAppointmentsByUserId( @PathVariable Long id, @RequestParam(required = false, defaultValue = "newest") String sortBy) {
+    public ResponseEntity<ApiResponseDto<List<AppointmentResponseDTO>>> findAllAppointmentsByUserId( @PathVariable UUID id, @RequestParam(required = false, defaultValue = "newest") String sortBy) {
         var appointments = appointmentService.findAllAppointmentsByUserId(id, sortBy);
         return ResponseEntity.ok(new ApiResponseDto<>(appointments, appointments.isEmpty() ? "Não foram encontrados agendamentos" : "Agendamentos retornados com sucesso!", HttpStatus.OK.value()));
     }
@@ -89,7 +90,7 @@ public class AppointmentController {
             )
     })
     @PatchMapping(value = "/cancel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ApiResponseDto> cancelAppointment(@PathVariable Long id) {
+    ResponseEntity<ApiResponseDto> cancelAppointment(@PathVariable UUID id) {
         appointmentService.cancelAppointment(id);
         return ResponseEntity.ok(new ApiResponseDto(null, "Agendamento cancelado com sucesso!", HttpStatus.OK.value()));
     }

@@ -5,9 +5,10 @@ import com.spring_app.demo.domain.entities.Appointment;
 import com.spring_app.demo.domain.entities.Speciality;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class AppointmentResponseDTO {
-    Long id;
+    UUID id;
     Instant dataAgendada;
     Speciality speciality;
     ClientResponseDTO client;
@@ -16,11 +17,11 @@ public class AppointmentResponseDTO {
 
     public AppointmentResponseDTO(){}
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

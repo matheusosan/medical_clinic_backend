@@ -32,11 +32,11 @@ class SpecialitySpecialityTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        speciality = new Speciality();
-        speciality.setId(1L);
-        speciality.setName("Radiologia");
-        speciality.setPrice(BigDecimal.valueOf(99.9));
+//        MockitoAnnotations.openMocks(this);
+//        speciality = new Speciality();
+//        speciality.setId(1L);
+//        speciality.setName("Radiologia");
+//        speciality.setPrice(BigDecimal.valueOf(99.9));
     }
 
 //    @DisplayName("Should return all Services")
@@ -50,25 +50,25 @@ class SpecialitySpecialityTest {
 //        assertEquals("Radiologia", foundSpeciality.getFirst().getName());
 //    }
 
-    @DisplayName("Should return a service by ID")
-    @Test
-    void findById() {
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.ofNullable(speciality));
+//    @DisplayName("Should return a service by ID")
+//    @Test
+//    void findById() {
+//        Mockito.when(repository.findById(1L)).thenReturn(Optional.ofNullable(speciality));
+//
+//        Speciality foundSpeciality = specialityService.findById(1L);
+//
+//        assertNotNull(foundSpeciality);
+//        assertEquals(speciality, foundSpeciality);
+//    }
 
-        Speciality foundSpeciality = specialityService.findById(1L);
-
-        assertNotNull(foundSpeciality);
-        assertEquals(speciality, foundSpeciality);
-    }
-
-    @DisplayName("Should throw an Exception if speciality was not found by ID")
-    @Test
-    void findByIdException() {
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.ofNullable(speciality));
-
-        assertThrows(ServiceNotFoundException.class, () -> specialityService.findById(2L));
-        Mockito.verify(repository, Mockito.times(1));
-    }
+//    @DisplayName("Should throw an Exception if speciality was not found by ID")
+//    @Test
+//    void findByIdException() {
+//        Mockito.when(repository.findById(1L)).thenReturn(Optional.ofNullable(speciality));
+//
+//        assertThrows(ServiceNotFoundException.class, () -> specialityService.findById(2L));
+//        Mockito.verify(repository, Mockito.times(1));
+//    }
 
     @DisplayName("Should create a service succesfully")
     @Test

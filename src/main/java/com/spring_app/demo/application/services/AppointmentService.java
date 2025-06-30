@@ -1,6 +1,9 @@
 package com.spring_app.demo.application.services;
 
+import com.spring_app.demo.domain.dtos.Appointment.AppointmentByDateAndService;
 import com.spring_app.demo.domain.dtos.Appointment.AppointmentRequestDTO;
+import com.spring_app.demo.domain.dtos.Appointment.AppointmentResponseDTO;
+import com.spring_app.demo.domain.dtos.Client.ClientResponseDTO;
 import com.spring_app.demo.domain.dtos.EmailPayloadDTO;
 import com.spring_app.demo.domain.entities.Appointment;
 import com.spring_app.demo.domain.entities.Client;
@@ -31,18 +34,33 @@ public class AppointmentService implements IAppointmentService {
         this.IMessagingService = IMessagingService;
     }
 
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
+    public List<AppointmentResponseDTO> getAllAppointments() {
+        var appointmentsEntity = appointmentRepository.findAll();
+
+        var appointments = appointmentsEntity.stream()
+                .map(entity -> {
+                    AppointmentResponseDTO dto = new AppointmentResponseDTO();
+                    dto.setId(entity.getId());
+                    dto.setDataAgendada(entity.getDataAgendada());
+                    dto.setSpeciality(entity.getSpeciality());
+                    dto.setClient(ClientResponseDTO.fromEntity(entity.getClient()));
+                    dto.setCancellationReason(entity.getCancellationReason());
+                    dto.setStatus(entity.getStatus());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return appointments;
     }
 
-    public List<AppointmentRequestDTO> findAllByDateAndServiceId(LocalDate date, Long specialityId) {
+    public List<AppointmentByDateAndService> findAllByDateAndServiceId(LocalDate date, Long specialityId) {
         List<Appointment> appointments = appointmentRepository.findAllByDateAndServiceId(date, specialityId);
         return appointments.stream().map(appointment ->
-                new AppointmentRequestDTO(appointment.getDataAgendada(), appointment.getSpeciality().getId(), appointment.getClient().getId(),appointment.getStatus()))
+                new AppointmentByDateAndService(appointment.getDataAgendada(), appointment.getSpeciality().getId(), appointment.getClient().getId(),appointment.getStatus()))
                     .collect(Collectors.toList());
     }
 
-    public List<Appointment> findAllAppointmentsByUserId(Long id, String sortBy) {
+    public List<AppointmentResponseDTO> findAllAppointmentsByUserId(Long id, String sortBy) {
         Sort sort = switch (sortBy.toLowerCase()) {
             case "oldest" -> Sort.by(Sort.Direction.ASC, "dataAgendada");
             case "newest" -> Sort.by(Sort.Direction.DESC, "dataAgendada");
@@ -51,7 +69,22 @@ public class AppointmentService implements IAppointmentService {
             default -> throw new IllegalArgumentException("Invalid sort option: " + sortBy);
         };
 
-        return appointmentRepository.findAllAppointmentsByUserId(id, sort);
+        var appointmentsEntity = appointmentRepository.findAllAppointmentsByUserId(id, sort);
+
+        var appointments = appointmentsEntity.stream()
+                .map(entity -> {
+                    AppointmentResponseDTO dto = new AppointmentResponseDTO();
+                    dto.setId(entity.getId());
+                    dto.setDataAgendada(entity.getDataAgendada());
+                    dto.setSpeciality(entity.getSpeciality());
+                    dto.setClient(ClientResponseDTO.fromEntity(entity.getClient()));
+                    dto.setCancellationReason(entity.getCancellationReason());
+                    dto.setStatus(entity.getStatus());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return appointments;
     }
 
     public void cancelAppointment(Long id) {

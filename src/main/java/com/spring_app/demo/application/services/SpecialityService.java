@@ -10,6 +10,7 @@ import com.spring_app.demo.infra.repositories.SpecialityRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +37,7 @@ public class SpecialityService implements ISpecialityService{
         return specialities;
     }
 
-    public Speciality findById(Long id) {
+    public Speciality findById(UUID id) {
         return specialityRepository.findById(id).orElseThrow(() -> new ServiceNotFoundException("Especialidade não encontrada."));
     }
 

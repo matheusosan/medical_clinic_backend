@@ -4,6 +4,7 @@ import com.spring_app.demo.domain.entities.Appointment;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class AppointmentByDateAndService {
 
@@ -11,16 +12,16 @@ public class AppointmentByDateAndService {
     Instant dataAgendada;
 
     @NotNull
-    Long serviceId;
+    UUID serviceId;
 
     @NotNull
-    Long clientId;
+    UUID clientId;
 
     Appointment.AppointmentStatus status;
 
     public AppointmentByDateAndService() {};
 
-    public AppointmentByDateAndService(Instant dataAgendada, Long serviceId, Long clientId, Appointment.AppointmentStatus status) {
+    public AppointmentByDateAndService(Instant dataAgendada, UUID serviceId, UUID clientId, Appointment.AppointmentStatus status) {
         this.dataAgendada = dataAgendada;
         this.serviceId = serviceId;
         this.clientId = clientId;
@@ -35,19 +36,19 @@ public class AppointmentByDateAndService {
         this.dataAgendada = dataAgendada;
     }
 
-    public Long getServiceId() {
+    public UUID getServiceId() {
         return serviceId;
     }
 
-    public void setServiceId(Long serviceId) {
+    public void setServiceId(UUID serviceId) {
         this.serviceId = serviceId;
     }
 
-    public Long getClientId() {
+    public UUID getClientId() {
         return clientId;
     }
 
-    public void setClientId(Long clientId) {
+    public void setClientId(UUID clientId) {
         this.clientId = clientId;
     }
 

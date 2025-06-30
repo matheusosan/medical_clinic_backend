@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientResponseDTO {
 
-    private Long id;
+    private UUID id;
     private String name;
     private String email;
     private String phoneNumber;
@@ -28,11 +29,11 @@ public class ClientResponseDTO {
         this.name = name;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

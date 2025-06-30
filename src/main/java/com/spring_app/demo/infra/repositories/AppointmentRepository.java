@@ -9,13 +9,14 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
 
     @Query("SELECT a FROM Appointment a WHERE DATE(a.dataAgendada) = :date AND a.speciality.id = :specialityId AND (a.status = 'AGENDADO')")
-    List<Appointment> findAllByDateAndServiceId(@Param("date") LocalDate date, @Param("specialityId") Long specialityId);
+    List<Appointment> findAllByDateAndServiceId(@Param("date") LocalDate date, @Param("specialityId") UUID specialityId);
 
     @Query("SELECT a FROM Appointment a WHERE a.client.id = :userId")
-    List<Appointment> findAllAppointmentsByUserId(@Param("userId") Long userId, Sort sort);
+    List<Appointment> findAllAppointmentsByUserId(@Param("userId") UUID userId, Sort sort);
 }

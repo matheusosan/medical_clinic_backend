@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,7 +58,7 @@ public class ClientService implements IClientService {
         return ClientResponseDTO.fromEntity(clientEntity);
     };
 
-    public Client findById(long id) {
+    public Client findById(UUID id) {
         return clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado."));
     }
 

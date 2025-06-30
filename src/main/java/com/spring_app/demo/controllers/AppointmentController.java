@@ -2,9 +2,7 @@ package com.spring_app.demo.controllers;
 
 import com.spring_app.demo.application.services.IAppointmentService;
 import com.spring_app.demo.domain.dtos.ApiResponseDto;
-import com.spring_app.demo.domain.dtos.Appointment.AppointmentRequestDTO;
-import com.spring_app.demo.domain.dtos.Appointment.AppointmentResponseDTO;
-import com.spring_app.demo.domain.dtos.Appointment.AppointmentResponseDTOSwagger;
+import com.spring_app.demo.domain.dtos.Appointment.*;
 import com.spring_app.demo.domain.dtos.ErrorResponseDTO;
 import com.spring_app.demo.domain.dtos.SuccessResponseDTO;
 import com.spring_app.demo.domain.entities.Appointment;
@@ -55,18 +53,19 @@ public class AppointmentController {
 
     @Operation(summary = "Busca agendamentos dado uma data e o ID do serviço", method = "GET")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso")
+            @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso", content = @Content(schema = @Schema(implementation = AppointmentByDateAndServiceSwagger.class)))
     })
     @GetMapping("/date")
-    public List<AppointmentRequestDTO> getAppointmentsByDateAndServiceId(@RequestParam("date") String date, @RequestParam("specialityId") Long specialityId) {
+    public ResponseEntity<ApiResponseDto<List<AppointmentByDateAndService>>> getAppointmentsByDateAndServiceId(@RequestParam("date") String date, @RequestParam("specialityId") Long specialityId) {
         LocalDate localDate = LocalDate.parse(date);
-        return appointmentService.findAllByDateAndServiceId(localDate, specialityId);
+        var appointments = appointmentService.findAllByDateAndServiceId(localDate, specialityId);
+        return ResponseEntity.ok(new ApiResponseDto<>(appointments,  appointments.isEmpty() ? "Não foarm encontrados agendamentos" : "Agendamentos retornados com sucesso!", HttpStatus.OK.value()));
     }
 
 
     @Operation(summary = "Busca todos agendamentos com base no ID de cliente", method = "GET")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso."),
+            @ApiResponse(responseCode = "200", description = "Agendamentos buscados com sucesso.", content = @Content(schema = @Schema(implementation = AppointmentResponseDTOSwagger.class))),
             @ApiResponse(
                     responseCode = "400",
                     description = "Erro: Agendamento não encontrado.",
@@ -74,14 +73,15 @@ public class AppointmentController {
             )
     })
     @GetMapping("/client/{id}")
-    public List<Appointment> findAllAppointmentsByUserId( @PathVariable Long id, @RequestParam(required = false, defaultValue = "newest") String sortBy) {
-        return appointmentService.findAllAppointmentsByUserId(id, sortBy);
+    public ResponseEntity<ApiResponseDto<List<AppointmentResponseDTO>>> findAllAppointmentsByUserId( @PathVariable Long id, @RequestParam(required = false, defaultValue = "newest") String sortBy) {
+        var appointments = appointmentService.findAllAppointmentsByUserId(id, sortBy);
+        return ResponseEntity.ok(new ApiResponseDto<>(appointments, appointments.isEmpty() ? "Não foram encontrados agendamentos" : "Agendamentos retornados com sucesso!", HttpStatus.OK.value()));
     }
 
 
     @Operation(summary = "Cancela um agendamento", method = "PATCH")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consulta cancelada com sucesso."),
+            @ApiResponse(responseCode = "200", description = "Consulta cancelada com sucesso.", content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
             @ApiResponse(
                     responseCode = "400",
                     description = "Erro: Agendamento não encontrado.",
@@ -89,15 +89,15 @@ public class AppointmentController {
             )
     })
     @PatchMapping(value = "/cancel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SuccessResponseDTO> cancelAppointment(@PathVariable Long id) {
+    ResponseEntity<ApiResponseDto> cancelAppointment(@PathVariable Long id) {
         appointmentService.cancelAppointment(id);
-        return ResponseEntity.ok(new SuccessResponseDTO(200, "Consulta cancelada!"));
+        return ResponseEntity.ok(new ApiResponseDto(null, "Agendamento cancelado com sucesso!", HttpStatus.OK.value()));
     }
 
 
     @Operation(summary = "Cria um agendamento", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Agendamento criado com sucesso."),
+            @ApiResponse(responseCode = "201", description = "Agendamento criado com sucesso.", content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
             @ApiResponse(
                     responseCode = "400",
                     description = "Erro: A data está fora do período permitido.",
@@ -105,12 +105,12 @@ public class AppointmentController {
             )
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SuccessResponseDTO> createAppointment(@Valid @RequestBody AppointmentRequestDTO dto) {
+    ResponseEntity<ApiResponseDto> createAppointment(@Valid @RequestBody AppointmentRequestDTO dto) {
         Appointment newAppointment = appointmentService.createAppointment(dto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAppointment).toUri();
 
-        return ResponseEntity.created(location).body(new SuccessResponseDTO(201, "Consulta agendada com sucesso!"));
+        return ResponseEntity.created(location).body(new ApiResponseDto<>(null, "Consulta agendada com sucesso!", HttpStatus.OK.value()));
 
     }
 }

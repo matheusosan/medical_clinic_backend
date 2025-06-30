@@ -1,6 +1,7 @@
 package com.spring_app.demo.application.services;
 
 import com.spring_app.demo.domain.dtos.Client.ClientRequestDTO;
+import com.spring_app.demo.domain.dtos.Client.ClientResponseDTO;
 import com.spring_app.demo.domain.entities.Client;
 import com.spring_app.demo.domain.exceptions.ClientExceptions.ClientAlreadyExistsException;
 import com.spring_app.demo.domain.exceptions.ClientExceptions.ClientNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService implements IClientService {
@@ -41,12 +43,18 @@ public class ClientService implements IClientService {
         return clientRepository.save(client);
     }
 
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+    public List<ClientResponseDTO> getAllClients() {
+        var clientsEntity = clientRepository.findAll();
+
+        return clientsEntity.stream()
+                .map(ClientResponseDTO::fromEntity)
+                .collect(Collectors.toList());
     };
 
-    public Client findClientByCPF(String cpf) {
-        return clientRepository.findByCpf(cpf).orElseThrow(() -> new ClientNotFoundException("Usuário não encontrado com o CPF fornecido!"));
+    public ClientResponseDTO findClientByCPF(String cpf) {
+        var clientEntity = clientRepository.findByCpf(cpf).orElseThrow(() -> new ClientNotFoundException("Usuário não encontrado com o CPF fornecido!"));
+
+        return ClientResponseDTO.fromEntity(clientEntity);
     };
 
     public Client findById(long id) {

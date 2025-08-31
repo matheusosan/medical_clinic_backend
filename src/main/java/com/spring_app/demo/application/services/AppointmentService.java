@@ -65,8 +65,8 @@ public class AppointmentService implements IAppointmentService {
         Sort sort = switch (sortBy.toLowerCase()) {
             case "oldest" -> Sort.by(Sort.Direction.ASC, "dataAgendada");
             case "newest" -> Sort.by(Sort.Direction.DESC, "dataAgendada");
-            case "cheapest" -> Sort.by(Sort.Direction.ASC, "service.price");
-            case "mostexpensive" -> Sort.by(Sort.Direction.DESC, "service.price");
+            case "cheapest" -> Sort.by(Sort.Direction.ASC, "speciality.price");
+            case "mostexpensive" -> Sort.by(Sort.Direction.DESC, "speciality.price");
             default -> throw new IllegalArgumentException("Invalid sort option: " + sortBy);
         };
 

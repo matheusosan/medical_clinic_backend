@@ -73,15 +73,13 @@ public class ClientController {
             @ApiResponse(responseCode = "200", description = "Dados do perfil do cliente buscados com sucesso.")
     })
     @GetMapping("/profile")
-    ResponseEntity<ClientResponseDTO> getProfile(@RequestHeader("Authorization") String authorizationHeader) {
+    ResponseEntity<ApiResponseDto> getProfile(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
 
         String userEmail = tokenService.validateToken(token);
         Client client = clientService.getByEmail(userEmail);
 
-        ClientResponseDTO response = new ClientResponseDTO(client.getId(), client.getName(), client.getEmail(), client.getPhoneNumber(), client.getCpf(), client.getBirthDate(), client.getRole());
-
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(new ApiResponseDto<>(client, "", HttpStatus.OK.value()));
     };
 
     @Operation(summary = "Busca um cliente por CPF", method = "GET")

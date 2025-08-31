@@ -29,7 +29,7 @@ public class SecurityConfiguration  {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST,"/appointment").authenticated()
                         .requestMatchers(HttpMethod.GET,"/appointment").authenticated()
-                        .requestMatchers(HttpMethod.PATCH,"/appointment/cancel/{id}").authenticated()
+                        .requestMatchers(HttpMethod.PATCH,"/appointment/cancel/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/service").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/client/profile").authenticated()
                         .requestMatchers(HttpMethod.GET,"/client").authenticated()

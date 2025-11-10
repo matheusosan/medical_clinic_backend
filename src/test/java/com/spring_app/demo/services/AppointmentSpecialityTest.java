@@ -111,7 +111,7 @@ class AppointmentSpecialityTest {
     void createAppointmentSuccess() throws JsonProcessingException {
         LocalDateTime date = LocalDateTime.of(2024, 9, 23, 10, 0);
         Instant validDate = date.toInstant(ZoneOffset.UTC);
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(validDate, speciality.getId(), client.getId(), Appointment.AppointmentStatus.AGENDADO);
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(validDate, speciality.getId(), client.getId());
 
         when(clientService.findById(dto.getClientId())).thenReturn(client);
         when(specialityService.findById(dto.getServiceId())).thenReturn(speciality);
@@ -133,7 +133,7 @@ class AppointmentSpecialityTest {
         LocalDateTime sundayDateTime = LocalDateTime.of(2024, 9, 22, 10, 0);
         Instant sundayInstant = sundayDateTime.toInstant(ZoneOffset.UTC);
 
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(sundayInstant, speciality.getId(), client.getId(), Appointment.AppointmentStatus.AGENDADO);
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(sundayInstant, speciality.getId(), client.getId());
 
         assertThrows(OutOfWorkingPeriodException.class, () -> appointmentService.createAppointment(dto));
     }
@@ -144,7 +144,7 @@ class AppointmentSpecialityTest {
         LocalDateTime invalidHour = LocalDateTime.of(2024, 9, 25, 8, 0);
         Instant invalidInstant = invalidHour.toInstant(ZoneOffset.UTC);
 
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(invalidInstant, speciality.getId(), client.getId(), Appointment.AppointmentStatus.AGENDADO);
+        AppointmentRequestDTO dto = new AppointmentRequestDTO(invalidInstant, speciality.getId(), client.getId());
 
         assertThrows(OutOfWorkingPeriodException.class, () -> appointmentService.createAppointment(dto));
     }

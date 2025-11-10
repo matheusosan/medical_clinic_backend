@@ -1,6 +1,5 @@
 package com.spring_app.demo.domain.dtos.Client;
 
-import com.spring_app.demo.domain.entities.Client;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -36,10 +35,6 @@ public class ClientRequestDTO {
     @NotNull
     @Schema( type = "string", example = "51999999999")
     private String phoneNumber;
-
-    @NotNull
-    @Schema( type = "string", example = "USER")
-    private Client.UserRoles role;
 
     @NotNull
     @Schema( type = "localdate", example = "2000-12-12")

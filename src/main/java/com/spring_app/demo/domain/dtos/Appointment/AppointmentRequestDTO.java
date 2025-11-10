@@ -1,6 +1,5 @@
 package com.spring_app.demo.domain.dtos.Appointment;
 
-import com.spring_app.demo.domain.entities.Appointment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -28,8 +27,4 @@ public class AppointmentRequestDTO {
     @NotNull
     @Schema( type = "long", example = "1")
     UUID clientId;
-
-    Appointment.AppointmentStatus status;
-
-
 }

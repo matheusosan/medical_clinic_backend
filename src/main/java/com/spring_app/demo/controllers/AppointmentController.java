@@ -4,7 +4,6 @@ import com.spring_app.demo.application.services.IAppointmentService;
 import com.spring_app.demo.domain.dtos.ApiResponseDto;
 import com.spring_app.demo.domain.dtos.Appointment.*;
 import com.spring_app.demo.domain.dtos.ErrorResponseDTO;
-import com.spring_app.demo.domain.dtos.SuccessResponseDTO;
 import com.spring_app.demo.domain.entities.Appointment;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

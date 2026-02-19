@@ -68,10 +68,14 @@ class SpecialitySpecialityTest {
     @DisplayName("Should throw an Exception if speciality was not found by ID")
     @Test
     void findByIdException() {
-        Mockito.when(repository.findById(UUID.randomUUID())).thenReturn(Optional.ofNullable(speciality));
+        UUID id = UUID.randomUUID();
 
-        assertThrows(ServiceNotFoundException.class, () -> specialityService.findById(UUID.randomUUID()));
-        Mockito.verify(repository, Mockito.times(1));
+        Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ServiceNotFoundException.class,
+                () -> specialityService.findById(id));
+
+        Mockito.verify(repository, Mockito.times(1)).findById(id);
     }
 
     @DisplayName("Should create a service succesfully")

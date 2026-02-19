@@ -5,6 +5,7 @@ import com.spring_app.demo.application.services.AppointmentService;
 import com.spring_app.demo.application.services.ClientService;
 import com.spring_app.demo.application.services.SpecialityService;
 import com.spring_app.demo.domain.dtos.Appointment.AppointmentRequestDTO;
+import com.spring_app.demo.domain.dtos.Appointment.AppointmentResponseDTO;
 import com.spring_app.demo.domain.entities.Appointment;
 import com.spring_app.demo.domain.entities.Client;
 import com.spring_app.demo.domain.entities.Speciality;
@@ -25,6 +26,7 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,38 +54,38 @@ class AppointmentSpecialityTest {
 
     @BeforeEach
     void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//        speciality = new Speciality();
-//        speciality.setId(1L);
-//        speciality.setName("Radiologia");
-//        speciality.setPrice(BigDecimal.valueOf(99.9));
-//
-//        client = new Client();
-//        client.setId(1L);
-//        client.setName("John Doe");
-//        client.setEmail("john.doe@example.com");
-//        client.setCpf("12345678900");
-//
-//        appointment = Appointment.builder()
-//                .id(1L)
-//                .client(client)
-//                .speciality(speciality)
-//                .dataAgendada(Instant.now())
-//                .status(Appointment.AppointmentStatus.CANCELADO)
-//                .build();
+        MockitoAnnotations.openMocks(this);
+        speciality = new Speciality();
+        speciality.setId(UUID.randomUUID());
+        speciality.setName("Radiologia");
+        speciality.setPrice(BigDecimal.valueOf(99.9));
+
+        client = new Client();
+        client.setId(UUID.randomUUID());
+        client.setName("John Doe");
+        client.setEmail("john.doe@example.com");
+        client.setCpf("12345678900");
+
+        appointment = Appointment.builder()
+                .id(UUID.randomUUID())
+                .client(client)
+                .speciality(speciality)
+                .dataAgendada(Instant.now())
+                .status(Appointment.AppointmentStatus.CANCELADO)
+                .build();
     }
 
 
-//    @Test
-//    void getAllAppointments() {
-//        when(appointmentRepository.findAll()).thenReturn(Collections.singletonList(appointment));
-//
-//        List<Appointment> foundAppointments = appointmentService.getAllAppointments();
-//
-//        assertEquals("John Doe", foundAppointments.getFirst().getClient().getName());
-//        assertEquals("Radiologia", foundAppointments.getFirst().getSpeciality().getName());
-//        verify(appointmentRepository, times(1)).findAll();
-//    }
+    @Test
+    void getAllAppointments() {
+        when(appointmentRepository.findAll()).thenReturn(Collections.singletonList(appointment));
+
+        List<AppointmentResponseDTO> foundAppointments = appointmentService.getAllAppointments();
+
+        assertEquals("John Doe", foundAppointments.getFirst().getClient().getName());
+        assertEquals("Radiologia", foundAppointments.getFirst().getSpeciality().getName());
+        verify(appointmentRepository, times(1)).findAll();
+    }
 
     @Test
     void findAllByDateAndServiceId() {
@@ -93,18 +95,23 @@ class AppointmentSpecialityTest {
     void findAllAppointmentsByUserId() {
     }
 
-//    @DisplayName("Should update the given appointment to CANCELED")
-//    @Test
-//    void cancelAppointmentSuccess() {
-//        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
-//
-//        appointmentService.cancelAppointment(1L);
-//
-//        assertEquals(Appointment.AppointmentStatus.CANCELADO, appointment.getStatus());
-//        assertEquals("Cancelado pelo usuário.", appointment.getCancellationReason());
-//
-//        verify(appointmentRepository).save(appointment);
-//    }
+    @DisplayName("Should update the given appointment to CANCELED")
+    @Test
+    void cancelAppointmentSuccess() {
+        UUID appointmentId = UUID.randomUUID();
+
+        appointment.setId(appointmentId);
+
+        when(appointmentRepository.findById(appointmentId))
+                .thenReturn(Optional.of(appointment));
+
+        appointmentService.cancelAppointment(appointmentId);
+
+        assertEquals(Appointment.AppointmentStatus.CANCELADO, appointment.getStatus());
+        assertEquals("Cancelado pelo usuário.", appointment.getCancellationReason());
+
+        verify(appointmentRepository).save(appointment);
+    }
 
     @DisplayName("Should create an appointment successfully")
     @Test

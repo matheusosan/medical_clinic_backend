@@ -18,17 +18,10 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "21"
+          cache: maven
 
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      - name: Make mvnw executable
+        run: chmod +x mvnw
 
-      - name: Build application
-        run: mvn clean package -DskipTests
-
-      - name: Run tests
-        run: mvn test
+      - name: Run unit tests
+        run: ./mvnw -B test
